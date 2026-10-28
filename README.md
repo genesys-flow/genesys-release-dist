@@ -24,15 +24,35 @@ curl -fsSL https://get.genesysflow.dev | GENESYS_REPO=me/mirror sh -s -- --domai
 
 ## Install just the CLI
 
+On your laptop or any machine that is not a Genesys server (Linux or macOS,
+amd64 or arm64):
+
+```sh
+curl -fsSL https://get.genesysflow.dev | GENESYS_NO_INSTALL=1 sh
+```
+
+Same script as above: it downloads the CLI, verifies it against
+`checksums.txt`, puts it in `/usr/local/bin` (using `sudo` if needed) and stops
+there instead of running `genesys install`. Then `genesys login --server
+https://genesys.apps.example.com`. Later updates are `genesys upgrade self`.
+
+Pin a version:
+
+```sh
+curl -fsSL https://get.genesysflow.dev | GENESYS_NO_INSTALL=1 GENESYS_VERSION=v0.54.0 sh
+```
+
+### By hand
+
 Download the archive for your OS and architecture from
 [Releases](../../releases), verify it, and put `genesys` on your `PATH`:
 
 ```sh
-tag=$(curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/genesysflow/genesys-release-dist/releases/latest | sed 's#.*/##')
-curl -fsSLO "https://github.com/genesysflow/genesys-release-dist/releases/download/$tag/genesys_${tag#v}_linux_amd64.tar.gz"
-curl -fsSLO "https://github.com/genesysflow/genesys-release-dist/releases/download/$tag/checksums.txt"
+tag=$(curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/Genesys-flow/genesys-release-dist/releases/latest | sed 's#.*/##')
+curl -fsSLO "https://github.com/Genesys-flow/genesys-release-dist/releases/download/$tag/genesys_${tag#v}_linux_amd64.tar.gz"
+curl -fsSLO "https://github.com/Genesys-flow/genesys-release-dist/releases/download/$tag/checksums.txt"
 sha256sum --check --ignore-missing checksums.txt
 tar -xzf "genesys_${tag#v}_linux_amd64.tar.gz" genesys && sudo install genesys /usr/local/bin/
 ```
 
-The controller image is published at `ghcr.io/genesysflow/genesys-release-controller`.
+The controller image is published at `ghcr.io/genesys-flow/genesys-release-controller`.
